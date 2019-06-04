@@ -1,6 +1,6 @@
 # Featurizer
 
-This repository containst the code used in Mayer & Daland (in progress). This code is made publicly available for use and extension in future research.
+This repository containst the code used in Mayer & Daland (resubmitted). This code is made publicly available for use and extension in future research.
 
 The basic functionality of this code is to take a set of input phonological classes and produce a feature system for that set. See the paper for a full description.
 
