@@ -1,6 +1,10 @@
 # Featurizer
 
-This repository containst the code used in Mayer & Daland (resubmitted). This code is made publicly available for use and extension in future research.
+This repository contains the code used in
+
+Mayer, C. and Daland, R. (to appear). A method for projecting features from observed sets of phonological classes. *Linguistic Inquiry*.
+
+This code is made publicly available for use and extension in future research.
 
 The basic functionality of this code is to take a set of input phonological classes and produce a feature system for that set. See the paper for a full description.
 
