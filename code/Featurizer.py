@@ -141,7 +141,7 @@ class Featurizer():
                 c: A set of strings
                 
             Returns:
-                The set of feature/value pairs poset_png(dassigned to c
+                The set of feature/value pairs assigned to c
         '''
         return set.intersection(*[
             self.segment_features.get(x, set()) for x in c
