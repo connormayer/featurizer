@@ -1,0 +1,14 @@
+// None
+digraph {
+	0 [label="{<segs> T, V, N, G, L |<feats>  }",shape=record]
+	1 [label="{<segs> G, V, N, L |<feats> +F1 }",shape=record]
+	2 [label="{<segs> T, N |<feats> +F2 }",shape=record]
+	3 [label="{<segs> G, V, L |<feats> +F1\n-F2 }",shape=record]
+	4 [label="{<segs> N |<feats> +F2\n+F1 }",shape=record]
+	5 [label="{<segs> T |<feats> +F2\n-F1 }",shape=record]
+	6 [label="{<segs> V |<feats> +F3\n+F1\n-F2 }",shape=record]
+	7 [label="{<segs> G |<feats> +F1\n-F2\n+F4 }",shape=record]
+	8 [label="{<segs> L |<feats> +F5\n+F1\n-F2 }",shape=record]
+	0 -> 1	0 -> 2	1 -> 3	1 -> 4	2 -> 4	2 -> 5	3 -> 6	3 -> 7	3 -> 8
+{rank=same; 4 5 6 7 8}
+}
