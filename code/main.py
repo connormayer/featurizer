@@ -1,36 +1,34 @@
 import Featurizer
-from tkinter import *
+import tkinter as tk
 from tkinter import ttk
 from tkinter import filedialog
 from tkinter import messagebox
 
 window_height = 300
 window_width = 400
+FEAT = (0, 'featurization')
+POSET = (1, 'poset')
 
 
-class Root(Tk):
+class Root(tk.Tk):
     def __init__(self):
         super(Root, self).__init__()
         self.title("Featurizer")
         self.minsize(window_width, window_height)
-        #self.wm_iconbitmap(())
-        #self.configure(background='#4D4D4D')
 
         # center the window
-        positionRight = int((self.winfo_screenwidth() / 2) - (window_width / 2))
-        positionDown = int((self.winfo_screenheight() / 2) - (window_height / 2))
+        position_right = int((self.winfo_screenwidth() / 2) - (window_width / 2))
+        position_down = int((self.winfo_screenheight() / 2) - (window_height / 2))
 
         # Positions the window in the center of the page.
-        self.geometry("+{}+{}".format(positionRight, positionDown))
+        self.geometry("+{}+{}".format(position_right, position_down))
 
         self.labelFrame = ttk.LabelFrame(self, text="Select a file")
         self.labelFrame.grid(column=5, columnspan=3, row=4, padx=100, pady=20)
-        self.labelFrame2 = ttk.LabelFrame(self, text="Select type")
-        self.labelFrame2.grid(column=5, row=14, padx=1, pady=20)
         self.labelFrame3 = ttk.LabelFrame(self, text="Featurization type")
-        self.labelFrame3.grid(column=6, row=14, padx=1, pady=20)
+        self.labelFrame3.grid(column=5, row=14, padx=100, pady=20)
         self.labelFrame4 = ttk.LabelFrame(self, text="Options")
-        self.labelFrame4.grid(column=7, row=14, padx=1, pady=20)
+        self.labelFrame4.grid(column=6, row=14, padx=1, pady=20)
         self.labelFrame5 = ttk.LabelFrame(self, text="Save a file")
         self.labelFrame5.grid(column=5, columnspan=3, row=24, padx=100, pady=20)
 
@@ -38,44 +36,28 @@ class Root(Tk):
         ##                INPUT BUTTON                 ##
         #################################################
 
-        lbl = Label(self.labelFrame, text="Input file")
+        lbl = tk.Label(self.labelFrame, text="Input file")
         lbl.grid(column=0, row=0, padx=20)
         self.filename_input = ""
         self.button_browse_input()
 
         #################################################
-        ##          RADIO BUTTON - SELECT TYPE         ##
-        #################################################
-        self.v = IntVar(None, 2)
-
-        Radiobutton(self.labelFrame2,
-                    indicatoron=0,
-                    text="featurization",
-                    variable=self.v,
-                    value=2).pack(anchor=W, fill=X)
-        Radiobutton(self.labelFrame2,
-                    indicatoron=0,
-                    text="Poset",
-                    variable=self.v,
-                    value=1).pack(anchor=W, fill=X)
-
-        #################################################
         ##       RADIO BUTTON - FEATURIZATION TYPE     ##
         #################################################
         MODES = [
-            ('complementary', 1),
-            ('privative', 2),
+            ('privative', 1),
+            ('complementary', 2),
             ('inferential_complementary', 3),
             ('full', 4)
         ]
-        self.featurization = StringVar(None, 'complementary')
+        self.featurization = tk.StringVar(None, 'complementary')
 
         for text, value in MODES:
-            Radiobutton(self.labelFrame3,
+            tk.Radiobutton(self.labelFrame3,
                         indicatoron=0,
                         text=text,
                         variable=self.featurization,
-                        value=text).pack(anchor=W, fill=X)
+                        value=text).pack(anchor=tk.W, fill=tk.X)
 
         self.specification = Featurizer.FEATURIZATION_MAP.get(self.featurization.get(), self.featurization.get())
 
@@ -83,26 +65,28 @@ class Root(Tk):
         ##               CHECK BOX - OPTIONS           ##
         #################################################
 
-        self.use_numpy = BooleanVar()
-        Checkbutton(self.labelFrame4,
+        self.use_numpy = tk.BooleanVar()
+        tk.Checkbutton(self.labelFrame4,
                     text="numpy",
-                    variable=self.use_numpy).pack(anchor=W, fill=X)
+                    variable=self.use_numpy).pack(anchor=tk.W, fill=tk.X)
 
-        self.verbose = BooleanVar()
-        Checkbutton(self.labelFrame4,
+        self.verbose = tk.BooleanVar()
+        tk.Checkbutton(self.labelFrame4,
                     text="verbose",
-                    variable=self.verbose).pack(anchor=W, fill=X)
+                    variable=self.verbose).pack(anchor=tk.W, fill=tk.X)
 
         #################################################
         ##               OUTPUT BUTTONS                ##
         #################################################
 
-        lbl2 = Label(self.labelFrame5, text="Output file")
+        lbl2 = tk.Label(self.labelFrame5, text="Output file")
         lbl2.grid(column=0, row=0, padx=20, pady=10)
 
+        self.button_browse_output_GV_feat()
+        self.button_browse_output_PNG_feat()
+        self.button_browse_output_GV_poset()
+        self.button_browse_output_PNG_poset()
         self.button_browse_output_CSV()
-        self.button_browse_output_GV()
-        self.button_browse_output_PNG()
 
         self.button_print()
 
@@ -136,20 +120,25 @@ class Root(Tk):
         label_input.grid(column=2, row=0)
         label_input.configure(text=self.filename_input)
 
-    def button_browse_output_PNG(self):
-        ''' Browse button to output PNG file based on the selected options '''
-        button = ttk.Button(self.labelFrame5, text="PNG", command=self.fileDialogSave_PNG)
-        button.grid(column=1, row=0)
+    def button_browse_output_PNG_feat(self):
+        ''' Browse button to output PNG (feat) file based on the selected options '''
+        button = ttk.Button(self.labelFrame5, text="Featurization graph as PNG", command= lambda: self.fileDialogSave_PNG(FEAT))
+        button.grid(column=1, row=0, sticky='ew')
 
-    def fileDialogSave_PNG(self):
+    def button_browse_output_PNG_poset(self):
+        ''' Browse button to output PNG (poset) file based on the selected options '''
+        button = ttk.Button(self.labelFrame5, text="Poset graph as PNG", command= lambda: self.fileDialogSave_PNG(POSET))
+        button.grid(column=1, row=1, sticky='ew')
+
+    def fileDialogSave_PNG(self, output_type):
         '''
             command associated with Browse Button for output_PNG
             Allowed filetype: .png
         '''
-        if self.input_validation():
+        if not self.input_validation():
             return
 
-        filename_default = self.generate_default_filename()
+        filename_default = self.generate_default_filename() + "_" + output_type[1]
         filename_output = filedialog.asksaveasfilename(
             confirmoverwrite=True,
             filetypes=[("PNG", "*.png")],
@@ -158,32 +147,41 @@ class Root(Tk):
             initialfile=filename_default,
             title="Choose a file name"
         )
+        #fileDialog cancelled
         if not filename_output:
             return
 
         featurizer, *_ = self.init_featurizer()
         filename_temp = filename_output.rsplit('/', 1)[0] + '/temp.temp'
-        if self.v.get() == 1:
-            featurizer.graph_poset(filename_temp)
-        elif self.v.get() == 2:
+        if output_type == FEAT:
             featurizer.graph_feats(filename_temp)
+        elif output_type == POSET:
+            featurizer.graph_poset(filename_temp)
 
-        featurizer.dot_to_png(filename_temp, filename_output)
+        try:
+            featurizer.dot_to_png(filename_temp, filename_output)
+        except:
+            messagebox.showerror("Missing graphviz", "Please visit https://graphviz.org to install graphviz")
 
-    def button_browse_output_GV(self):
-        ''' Browse button to output GV file based on the selected options '''
-        button = ttk.Button(self.labelFrame5, text="GV", command=self.fileDialogSave_GV)
-        button.grid(column=3, row=0)
+    def button_browse_output_GV_feat(self):
+        ''' Browse button to output GV (feat) file based on the selected options '''
+        button = ttk.Button(self.labelFrame5, text="Featurization graph asGV", command= lambda: self.fileDialogSave_GV(FEAT))
+        button.grid(column=2, row=0, sticky='ew')
 
-    def fileDialogSave_GV(self):
+    def button_browse_output_GV_poset(self):
+        ''' Browse button to output GV (poset) file based on the selected options '''
+        button = ttk.Button(self.labelFrame5, text="Poset graph as GV", command= lambda: self.fileDialogSave_GV(POSET))
+        button.grid(column=2, row=1, sticky='ew')
+
+    def fileDialogSave_GV(self, output_type):
         '''
             command associated with Browse Button for output_GV
             Allowed filetype: .gv
         '''
-        if self.input_validation():
+        if not self.input_validation():
             return
 
-        filename_default = self.generate_default_filename()
+        filename_default = self.generate_default_filename() + "_" + output_type[1]
         filename_output = filedialog.asksaveasfilename(
             confirmoverwrite=True,
             filetypes=[("GV", "*.gv")],
@@ -192,26 +190,28 @@ class Root(Tk):
             initialfile=filename_default,
             title="Choose a file name"
         )
+        #fileDialog cancelled
         if not filename_output:
             return
 
         featurizer, *_ = self.init_featurizer()
-        if self.v.get() == 1:
-            featurizer.graph_poset(filename_output)
-        elif self.v.get() == 2:
+        if output_type == FEAT:
             featurizer.graph_feats(filename_output)
+        elif output_type == POSET:
+            featurizer.graph_poset(filename_output)
+
 
     def button_browse_output_CSV(self):
         ''' Browse button to output CSV file based on the selected options '''
         button = ttk.Button(self.labelFrame5, text="CSV", command=self.fileDialogSave_CSV)
-        button.grid(column=2, row=0)
+        button.grid(column=4, row=0, padx=20)
 
     def fileDialogSave_CSV(self):
         '''
             command associated with Browse Button for output_CSV
             Allowed filetype: .csv
         '''
-        if self.input_validation():
+        if not self.input_validation():
             return
 
         filename_default = self.generate_default_filename()
@@ -232,41 +232,41 @@ class Root(Tk):
     def button_print(self):
         ''' Button to print results based on the selected options '''
         button = ttk.Button(self.labelFrame5, text="print", command=self.print_new_window)
-        button.grid(column=4, row=0, padx=20)
+        button.grid(column=4, row=1, padx=20)
 
     def print_new_window(self):
         '''
             command associated with print button
             Pops up new window
         '''
-        if self.input_validation():
+        if not self.input_validation():
             return
         featurizer, verbose_text = self.init_featurizer()
 
         # Toplevel object which will
         # be treated as a new window
-        newWindow = Toplevel(root)
+        new_window = tk.Toplevel(root)
 
         # sets the title of the
         # Toplevel widget
-        newWindow.title("Print")
+        new_window.title("Print")
 
         text_print = verbose_text + featurizer.print_featurization_helper() + \
                      featurizer.print_segment_features_helper()
 
-            # A Label widget to show in toplevel
-        text1 = Text(newWindow, height=60, width=150)
-        text1.insert(END, text_print)
+        # A Label widget to show in toplevel
+        text1 = tk.Text(new_window, height=60, width=150)
+        text1.insert(tk.END, text_print)
         text1.config()
         text1.pack()
 
     def input_validation(self):
         ''' Checks if input filename has been selected '''
-        if self.filename_input is "":
+        if not self.filename_input:
             messagebox.showinfo("Error", "Please select an input file")
-            return True
+            return False
         self.specification = Featurizer.FEATURIZATION_MAP.get(self.featurization.get(), self.featurization.get())
-        return False
+        return True
 
     def generate_default_filename(self):
         inv_map = {v: k for k, v in Featurizer.FEATURIZATION_MAP.items()}

@@ -1,12 +1,9 @@
 import argparse
 
-## addition
-#import pydot
-from graphviz import render
-
 from Poset import Poset
 from collections import defaultdict, deque
 from enum import Enum
+from graphviz import render
 from os import path, remove, rename
 
 # This code requires boolean matrix functionality, which numpy provides
@@ -164,11 +161,6 @@ class Featurizer():
         render('dot', 'png', temp_input)
         rename(temp_input + '.png', filename_output)
         remove(temp_input)
-
-        ## method using the pydot
-        #(graph,) = pydot.graph_from_dot_file(filename)
-        #graph.write_png('test.png')
-
 
     def graph_poset(self, filename=None, kw_args=None):
         '''
