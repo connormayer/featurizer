@@ -147,7 +147,7 @@ class Root(tk.Tk):
             initialfile=filename_default,
             title="Choose a file name"
         )
-        #fileDialog cancelled
+        # fileDialog cancelled
         if not filename_output:
             return
 
@@ -165,12 +165,16 @@ class Root(tk.Tk):
 
     def button_browse_output_GV_feat(self):
         ''' Browse button to output GV (feat) file based on the selected options '''
-        button = ttk.Button(self.labelFrame5, text="Featurization graph asGV", command= lambda: self.fileDialogSave_GV(FEAT))
+        button = ttk.Button(self.labelFrame5,
+                            text="Featurization graph as GV",
+                            command=lambda: self.fileDialogSave_GV(FEAT))
         button.grid(column=2, row=0, sticky='ew')
 
     def button_browse_output_GV_poset(self):
         ''' Browse button to output GV (poset) file based on the selected options '''
-        button = ttk.Button(self.labelFrame5, text="Poset graph as GV", command= lambda: self.fileDialogSave_GV(POSET))
+        button = ttk.Button(self.labelFrame5,
+                            text="Poset graph as GV",
+                            command=lambda: self.fileDialogSave_GV(POSET))
         button.grid(column=2, row=1, sticky='ew')
 
     def fileDialogSave_GV(self, output_type):
@@ -190,7 +194,7 @@ class Root(tk.Tk):
             initialfile=filename_default,
             title="Choose a file name"
         )
-        #fileDialog cancelled
+        # fileDialog cancelled
         if not filename_output:
             return
 

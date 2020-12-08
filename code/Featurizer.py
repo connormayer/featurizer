@@ -150,15 +150,16 @@ class Featurizer():
             features = self.get_class_features(c)
             self.set_class_features(c, features)
 
-
     def dot_to_png(self, temp_input, filename_output):
         """ Convert the dot file to png file """
         # method using the render from graphviz module
+        render('dot', 'png', temp_input)
+
+        # remove the file if already exist
         try:
             remove(filename_output)
         except OSError:
             pass
-        render('dot', 'png', temp_input)
         rename(temp_input + '.png', filename_output)
         remove(temp_input)
 
