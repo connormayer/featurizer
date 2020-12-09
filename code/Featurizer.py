@@ -3,7 +3,8 @@ import argparse
 from Poset import Poset
 from collections import defaultdict, deque
 from enum import Enum
-from os import path
+from graphviz import render, ExecutableNotFound
+from os import path, remove, rename
 
 # This code requires boolean matrix functionality, which numpy provides
 # set this value to True if you have numpy installed
@@ -148,6 +149,19 @@ class Featurizer():
         for c in self.poset.classes:
             features = self.get_class_features(c)
             self.set_class_features(c, features)
+
+    def dot_to_png(self, temp_input, filename_output):
+        """ Convert the dot file to png file """
+        # method using the render from graphviz module
+        render('dot', 'png', temp_input)
+
+        # remove the file if already exist
+        try:
+            remove(filename_output)
+        except OSError:
+            pass
+        rename(temp_input + '.png', filename_output)
+        remove(temp_input)
 
     def graph_poset(self, filename=None, kw_args=None):
         '''
@@ -344,19 +358,27 @@ class Featurizer():
 
     def print_featurization(self):
         '''Print out the classes and their featural specifications.'''
-        print('Class features')
+        print(self.print_featurization_helper(), end='')
+
+    def print_featurization_helper(self):
+        text_to_print = "Class features\n"
         for key, value in sorted(self.class_features.items(),
                                  key=lambda x: -len(x[0])):
-            print("{}:\t{}".format(key, sorted(value)))
-        print()
+            text_to_print += str(key) + ":\t" + str(sorted(value)) + "\n"
+        text_to_print += "\n"
+        return text_to_print
 
     def print_segment_features(self):
         '''Print out the segments and their featural specifications'''
-        print("Segment features")
+        print(self.print_segment_features_helper(), end='')
+
+    def print_segment_features_helper(self):
+        text_to_print = "Segment features\n"
         for key, value in sorted(self.segment_features.items(),
                                  key=lambda x: -len(x[0])):
-            print("{}:\t{}".format(key, sorted(value)))
-        print() 
+            text_to_print += str(key) + ":\t" + str(sorted(value)) + "\n"
+        text_to_print += "\n"
+        return text_to_print
 
     def add_complement_classes(self):
         '''
@@ -400,16 +422,22 @@ class Featurizer():
             new_children = self.poset.get_children(current_node)
             bfs_deque.extend(new_children)
 
+
     def featurize_classes(self):
+        '''
+            Modification: instead of print to screen, all the print statement has been revised
+            so that all printed text are appended to verbose_text string.
+        '''
+        verbose_text = ""
         if self.verbose:
-            print("Classes to process: {}".format(self.poset.classes))
+            verbose_text += "Classes to process: " + str(self.poset.classes) + "\n"
         '''Featurize the currently calculated poset'''
         incomplete_classes = self.poset.classes.copy()
 
         while incomplete_classes:
             c = incomplete_classes.pop(0)
             if self.verbose:
-                print("Processing class: {}".format(c))
+                verbose_text += "Processing class: " + str(c) + "\n"
             # We only need to do something if the current class has exactly
             # one parent
             if len(self.poset.get_parents(c)) == 1:
@@ -444,19 +472,24 @@ class Featurizer():
                 self.feature_num += 1
 
                 if self.verbose:
-                    self.print_segment_features()
+                    verbose_text += self.print_segment_features_helper()
 
         self.calculate_class_features()
         self.assert_valid_featurization()
 
+        return verbose_text
+
     def get_features_from_classes(self):
+        print(self.get_features_from_classes_helper(), end='')
+
+    def get_features_from_classes_helper(self):
         '''
             Calculate the complements added by the featurization if any, and then
             featurize the poset
         '''
         if self.specification in (Specification.INFERENTIAL_COMPLEMENTARY, Specification.FULL):
             self.add_complement_classes()
-        self.featurize_classes()
+        return self.featurize_classes()
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
@@ -491,12 +524,14 @@ if __name__ == "__main__":
         '--verbose', action='store_true',
         help='Prints additional information throughout the course of the featurization.'
     )
+
     args = parser.parse_args()
     specification = FEATURIZATION_MAP.get(args.featurization, args.featurization)
     featurizer = Featurizer.from_file(
         args.input_file, specification, use_numpy=args.use_numpy,
         verbose=args.verbose
     )
+
     featurizer.get_features_from_classes()
     featurizer.print_featurization()
     featurizer.print_segment_features()
