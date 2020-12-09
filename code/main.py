@@ -106,10 +106,10 @@ class Root(tk.Tk):
 
     def button_browse_input(self):
         ''' Browse Button for filename_input '''
-        button = ttk.Button(self.labelFrame, text="Browse", command=self.fileDialog)
+        button = ttk.Button(self.labelFrame, text="Browse", command=self.file_dialog)
         button.grid(column=1, row=0)
 
-    def fileDialog(self):
+    def file_dialog(self):
         '''
             command associated with Browse Button for filename_input
             Allowed filetype: .txt
@@ -122,15 +122,19 @@ class Root(tk.Tk):
 
     def button_browse_output_PNG_feat(self):
         ''' Browse button to output PNG (feat) file based on the selected options '''
-        button = ttk.Button(self.labelFrame5, text="Featurization graph as PNG", command= lambda: self.fileDialogSave_PNG(FEAT))
+        button = ttk.Button(self.labelFrame5,
+                            text="Featurization graph as PNG",
+                            command=lambda: self.file_dialog_save_PNG(FEAT))
         button.grid(column=1, row=0, sticky='ew')
 
     def button_browse_output_PNG_poset(self):
         ''' Browse button to output PNG (poset) file based on the selected options '''
-        button = ttk.Button(self.labelFrame5, text="Poset graph as PNG", command= lambda: self.fileDialogSave_PNG(POSET))
+        button = ttk.Button(self.labelFrame5,
+                            text="Poset graph as PNG",
+                            command=lambda: self.file_dialog_save_PNG(POSET))
         button.grid(column=1, row=1, sticky='ew')
 
-    def fileDialogSave_PNG(self, output_type):
+    def file_dialog_save_PNG(self, output_type):
         '''
             command associated with Browse Button for output_PNG
             Allowed filetype: .png
@@ -147,7 +151,7 @@ class Root(tk.Tk):
             initialfile=filename_default,
             title="Choose a file name"
         )
-        # fileDialog cancelled
+        # file_dialog cancelled
         if not filename_output:
             return
 
@@ -160,24 +164,26 @@ class Root(tk.Tk):
 
         try:
             featurizer.dot_to_png(filename_temp, filename_output)
-        except:
-            messagebox.showerror("Missing graphviz", "Please visit https://graphviz.org to install graphviz")
+        except Featurizer.ExecutableNotFound:
+            messagebox.showerror("Missing graphviz",
+                                 "Missing graphviz executable\n" +
+                                 "Please visit https://graphviz.org to install graphviz")
 
     def button_browse_output_GV_feat(self):
         ''' Browse button to output GV (feat) file based on the selected options '''
         button = ttk.Button(self.labelFrame5,
                             text="Featurization graph as GV",
-                            command=lambda: self.fileDialogSave_GV(FEAT))
+                            command=lambda: self.file_dialog_save_GV(FEAT))
         button.grid(column=2, row=0, sticky='ew')
 
     def button_browse_output_GV_poset(self):
         ''' Browse button to output GV (poset) file based on the selected options '''
         button = ttk.Button(self.labelFrame5,
                             text="Poset graph as GV",
-                            command=lambda: self.fileDialogSave_GV(POSET))
+                            command=lambda: self.file_dialog_save_GV(POSET))
         button.grid(column=2, row=1, sticky='ew')
 
-    def fileDialogSave_GV(self, output_type):
+    def file_dialog_save_GV(self, output_type):
         '''
             command associated with Browse Button for output_GV
             Allowed filetype: .gv
@@ -194,7 +200,7 @@ class Root(tk.Tk):
             initialfile=filename_default,
             title="Choose a file name"
         )
-        # fileDialog cancelled
+        # file_dialog cancelled
         if not filename_output:
             return
 
@@ -207,10 +213,10 @@ class Root(tk.Tk):
 
     def button_browse_output_CSV(self):
         ''' Browse button to output CSV file based on the selected options '''
-        button = ttk.Button(self.labelFrame5, text="CSV", command=self.fileDialogSave_CSV)
+        button = ttk.Button(self.labelFrame5, text="CSV", command=self.file_dialog_save_CSV)
         button.grid(column=4, row=0, padx=20)
 
-    def fileDialogSave_CSV(self):
+    def file_dialog_save_CSV(self):
         '''
             command associated with Browse Button for output_CSV
             Allowed filetype: .csv

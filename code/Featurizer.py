@@ -3,7 +3,7 @@ import argparse
 from Poset import Poset
 from collections import defaultdict, deque
 from enum import Enum
-from graphviz import render
+from graphviz import render, ExecutableNotFound
 from os import path, remove, rename
 
 # This code requires boolean matrix functionality, which numpy provides
