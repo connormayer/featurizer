@@ -247,12 +247,13 @@ class Featurizer():
         node_string_prefix = '[label="{<segs>'
         node_string_infix = '|<feats>'
         node_string_suffix = '}",shape=record]'
-        
-        for i, c in enumerate(self.poset.classes):
-            features = self.get_class_features(c)
+
+        for i, sc in enumerate(self.poset.classes):
+            c = sorted(sc)
+            features = sorted(self.get_class_features(c))
             seg_string = ', '.join(c)
             feat_string = '\\n'.join('{0}F{1}'.format(f[1],f[0]) for f in features)
-            
+
             node_string = '{0} {1} {2} {3} {4}'.format(node_string_prefix,
                                                        seg_string,
                                                        node_string_infix,
