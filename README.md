@@ -25,7 +25,7 @@ Python requirements (other versions will probably work, but have not been tested
 
 Other requirements
 
-* Graphviz (2.4.11) (optional, but required to generate `.png` outputs): In order to generate `.png` images, you will also need to have the Graphviz installed on your system. This is in addition to the `graphviz` Python library mentioned above, which just provides an interface between Python and Graphviz. You can download Graphviz [here](https://graphviz.org/download/).
+* Graphviz (2.4.11) (optional, but required to generate `.png` outputs): In order to generate `.png` images, you will also need to have Graphviz installed on your system. This is in addition to the `graphviz` Python library mentioned above, which just provides an interface between Python and Graphviz. You can download Graphviz [here](https://graphviz.org/download/).
 
 ## Input and output formats
 
