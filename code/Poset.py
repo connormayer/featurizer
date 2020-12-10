@@ -135,7 +135,8 @@ class Poset():
         linebuf.append('digraph {')
 
         # get nodes
-        for i, cl in enumerate(self.classes):
+        for i, scl in enumerate(self.classes):
+            cl = sorted(scl)
             attributes = {'label': '"' + ', '.join(cl) + '"'}
             if cl in self.input_classes:
                 attributes['shape'] = ORIG_CLASS_NODE_SHAPE
