@@ -2,7 +2,9 @@
 
 This repository contains the code used in
 
-Mayer, C. and Daland, R. (2020). A method for projecting features from observed sets of phonological classes. *Linguistic Inquiry, 51*(4). You can find a pre-print of the paper [here](https://linguistics.ucla.edu/people/grads/connormayer/papers/cmayer_rdaland_projecting_features_revised.pdf) and the final version [here](https://www.mitpressjournals.org/doi/abs/10.1162/ling_a_00359).
+Mayer, C. and Daland, R. (2020). A method for projecting features from observed sets of phonological classes. *Linguistic Inquiry, 51*(4). 
+
+You can find a pre-print of the paper [here](https://linguistics.ucla.edu/people/grads/connormayer/papers/cmayer_rdaland_projecting_features_revised.pdf) and the final version [here](https://www.mitpressjournals.org/doi/abs/10.1162/ling_a_00359).
 
 This code is made publicly available for use and extension in future research. I'm happy to help with troubleshooting any issues you might encounter.
 
