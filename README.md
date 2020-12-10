@@ -10,7 +10,7 @@ This code is made publicly available for use and extension in future research. I
 
 The basic functionality of this code is to take a set of input phonological classes and produce a feature system for that set. See the paper for a full description.
 
-This program can be run with either a graphical user interface (GUI) or a command line interface. Instructions for each can be found below.
+This program can be run with either a graphical user interface (GUI; implemented by [Isaac Lee](https://github.com/eyezhick)) or a command line interface. Instructions for each can be found below.
 
 ---
 
