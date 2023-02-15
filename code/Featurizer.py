@@ -9,7 +9,7 @@ from os import path, remove, rename
 # This code requires boolean matrix functionality, which numpy provides
 # set this value to True if you have numpy installed
 # otherwise, use our slower native Python implementation
-USE_NUMPY = False
+USE_NUMPY = True
 if USE_NUMPY:
     import numpy as np
     ARRAY = np
@@ -329,7 +329,7 @@ class Featurizer():
                     "but produces class {}".format(features, set(c), predicted_class)
                 )
 
-    def features_to_csv(self, filename=None):
+    def features_to_csv(self, filename=None, hw_format=False):
         '''
             Creates a CSV with classes as rows and corresponding feautral
             descriptors as columns
@@ -342,9 +342,12 @@ class Featurizer():
             filename = "../csv_output/{}_{}.csv".format(
                 self.rootname, inv_map[self.specification]
             )
+
+        sep = '\t' if hw_format else ','
+
         with open(filename, 'w') as f:
-            print(',' + ','.join([
-                    str(i) for i in range(1, self.feature_num)
+            print(sep + sep.join([
+                    'f{:02d}'.format(i) for i in range(1, self.feature_num)
                 ]),
                 file=f
             )
@@ -352,10 +355,10 @@ class Featurizer():
                     key=lambda x: -len(x[0])):
                 d = dict(value)
                 line = []
-                line.append("{}".format(' '.join(key)))
+                line.append("{}".format(''.join(key)))
                 for i in range(1, self.feature_num):
                     line.append(d.get(i, '0'))
-                print(','.join(line), file=f)
+                print(sep.join(line), file=f)
 
     def print_featurization(self):
         '''Print out the classes and their featural specifications.'''
@@ -391,7 +394,12 @@ class Featurizer():
         '''
         bfs_deque = deque([self.alphabet])
 
+        # There's a bug here when the input class system consists of
+        # a few large classes and all the singleton classes. This produces
+        # a ton of complements, but it also seems to introduce duplicates 
+        # into the deque for some reason...
         while bfs_deque:
+            print(len(bfs_deque))
             current_node = bfs_deque.popleft()
             children = self.poset.get_children(current_node)
 
@@ -403,7 +411,7 @@ class Featurizer():
                 if (len(self.poset.get_parents(child)) == 1):
                     # If a child only has a single parent, define a complement
                     # class wrt the current class (inferential complementary)
-                    #or the alphabet (full)
+                    # or the alphabet (full)
                     if self.specification == Specification.FULL:
                         complement = self.alphabet - child
                     elif self.specification == Specification.INFERENTIAL_COMPLEMENTARY:
@@ -421,8 +429,9 @@ class Featurizer():
             # Get the new children of the current parent node and add them to
             # the queue to be processed.
             new_children = self.poset.get_children(current_node)
-            bfs_deque.extend(new_children)
-
+            for x in new_children:
+                if not x in bfs_deque:
+                    bfs_deque.append(x)
 
     def featurize_classes(self):
         '''
@@ -525,6 +534,11 @@ if __name__ == "__main__":
         '--verbose', action='store_true',
         help='Prints additional information throughout the course of the featurization.'
     )
+    parser.add_argument(
+        '--hw_format', action='store_true', default=False,
+        help='If provided, the output features file will be in the format used in the '
+             'Hayes and Wilson (2008) learner.'
+    )
 
     args = parser.parse_args()
     specification = FEATURIZATION_MAP.get(args.featurization, args.featurization)
@@ -536,6 +550,6 @@ if __name__ == "__main__":
     featurizer.get_features_from_classes()
     featurizer.print_featurization()
     featurizer.print_segment_features()
-    featurizer.graph_poset(args.poset_file)
-    featurizer.graph_feats(args.feats_file)
-    featurizer.features_to_csv(args.output_file)
+    #featurizer.graph_poset(args.poset_file)
+    #featurizer.graph_feats(args.feats_file)
+    featurizer.features_to_csv(args.output_file, args.hw_format)

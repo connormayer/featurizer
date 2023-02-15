@@ -5,7 +5,7 @@ from collections import deque
 from itertools import compress
 
 # See the comment in the SimpleBoolArray class
-USE_NUMPY = False
+USE_NUMPY = True
 
 if USE_NUMPY:
     import numpy as np
@@ -57,6 +57,9 @@ class Poset():
         """
         new_classes = [x for x in new_classes if x not in self.classes]
 
+        if not new_classes:
+            return False
+
         if update_closure:
             # Update intersectional closure
             self.get_intersectional_closure(
@@ -70,6 +73,8 @@ class Poset():
             self.calculate_subset_matrix()
             self.calculate_daughter_matrix()
 
+        return True
+        
     def calculate_subset_matrix(self):
         """
         Goes through every pair of sets in the inputs and determines whether
